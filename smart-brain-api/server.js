@@ -1,6 +1,7 @@
 // import 'express'
 const express = require("express");
 const bodyParser = require("body-parser");
+const bcrypt = require("bcrypt-nodejs");
 
 // create app using express
 const app = express();
@@ -25,6 +26,13 @@ const database = {
       joined: new Date(),
     },
   ],
+  login: [
+    {
+      id: "987",
+      hash: "",
+      email: "john@gmail.com",
+    },
+  ],
 };
 
 // A basic route to make sure everything is working we are usint '/' the route
@@ -34,6 +42,22 @@ app.get("/", (req, res) => {
 });
 
 app.post("/signin", (req, res) => {
+  bcrypt.compare(
+    "apples",
+    "$2a$10$um6i/75/fML2mLomrgcvbezyAzzzidcrhXmEkk1XuB9V/TWG65ViG",
+    function (err, res) {
+      // res == true
+      console.log("first guess", res);
+    }
+  );
+  bcrypt.compare(
+    "broccolli",
+    "$2a$10$lcK6P.w/NosQcVCFJSPGH.9DGlUXoriYdNKu5Qn.osxs1.FbxcMtq",
+    function (err, res) {
+      // res = false
+      console.log("second guess", res);
+    }
+  );
   if (
     req.body.email === database.users[0].email &&
     req.body.password === database.users[0].password
@@ -88,13 +112,19 @@ app.post("/image", (request, response) => {
   }
 });
 
+bcrypt.hash("bacon", null, null, function (err, hash) {
+  // Store hash in your password DB.
+});
+
+// // Load hash from your password DB.
+
 // listen on port 3000 for requests
 app.listen(3000, () => {
   console.log("app is running on port 3000");
 });
 
 /*   
-   DESIGN OF THE ROUTES:
+   DESIGN OF THE ROUTES: 
    THESE ARE THE ENDPOINTS WE WILL CREATE:
 
     / --> res = this is working
