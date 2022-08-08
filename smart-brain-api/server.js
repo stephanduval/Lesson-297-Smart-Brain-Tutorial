@@ -2,10 +2,12 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt-nodejs");
-
+const cors = require("cors");
 // create app using express
 const app = express();
+
 app.use(bodyParser.json());
+app.use(cors());
 
 const database = {
   users: [
@@ -19,9 +21,9 @@ const database = {
     },
     {
       id: "122",
-      name: "Gill",
+      name: "Sally",
       email: "Gilly@gmail.com",
-      password: "spookies",
+      password: "bananas",
       entries: "0",
       joined: new Date(),
     },
@@ -42,22 +44,6 @@ app.get("/", (req, res) => {
 });
 
 app.post("/signin", (req, res) => {
-  bcrypt.compare(
-    "apples",
-    "$2a$10$um6i/75/fML2mLomrgcvbezyAzzzidcrhXmEkk1XuB9V/TWG65ViG",
-    function (err, res) {
-      // res == true
-      console.log("first guess", res);
-    }
-  );
-  bcrypt.compare(
-    "broccolli",
-    "$2a$10$lcK6P.w/NosQcVCFJSPGH.9DGlUXoriYdNKu5Qn.osxs1.FbxcMtq",
-    function (err, res) {
-      // res = false
-      console.log("second guess", res);
-    }
-  );
   if (
     req.body.email === database.users[0].email &&
     req.body.password === database.users[0].password
@@ -97,7 +83,7 @@ app.get("/profile/:id", (req, res) => {
   }
 });
 
-app.post("/image", (request, response) => {
+app.put("/image", (request, response) => {
   const { id } = request.body;
   let found = false;
   database.users.forEach((user) => {
